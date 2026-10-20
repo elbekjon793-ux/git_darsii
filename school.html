@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATM O'quv Markazi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        nav a:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .hero {
+            background-image: url(./ATM\ LOGO\ RASM.jpg);
+            background-size: cover;
+            background-position: center;
+            height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .hero-content h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #1e3c72;
+        }
+
+        .hero-content p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            color: #333;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #e74c3c;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            transition: transform 0.3s;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+        }
+
+        section {
+            padding: 60px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 40px;
+            color: #1e3c72;
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .about-text p {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .about-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .stat-box {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            border-radius: 10px;
+        }
+
+        .stat-box h3 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .course-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .course-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .course-image {
+            height: 200px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+        }
+
+        .course-content {
+            padding: 20px;
+        }
+
+        .course-title {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: #1e3c72;
+        }
+
+        .teachers-section {
+            background: #f5f7fa;
+            padding: 60px 20px;
+        }
+
+        .teachers-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .teacher-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 50px;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .teacher-image {
+            height: 300px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 6rem;
+            color: white;
+        }
+
+        .teacher-details {
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .teacher-name {
+            font-size: 1.8rem;
+            color: #1e3c72;
+            margin-bottom: 5px;
+        }
+
+        .teacher-subject {
+            font-size: 1.2rem;
+            color: #e74c3c;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .teacher-experience {
+            display: inline-block;
+            background: #e74c3c;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            width: fit-content;
+        }
+
+        .teacher-bio {
+            color: #555;
+            font-size: 1rem;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .teacher-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .skill-tag {
+            background: #f0f4f8;
+            color: #1e3c72;
+            padding: 5px 12px;
+            border-radius: 5px;
+            font-size: 0.85rem;
+        }
+
+        /* CONTACT SECTION */
+        .contact-section {
+            background: #f8f9fa;
+        }
+
+        .contact-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .contact-info {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 15px;
+        }
+
+        .contact-info h3 {
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .info-icon {
+            font-size: 1.5rem;
+        }
+
+        .info-text h4 {
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+
+        .info-text p {
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+
+        .contact-form {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .contact-form h3 {
+            font-size: 1.8rem;
+            color: #1e3c72;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 1rem;
+            color: #1e3c72;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #1e3c72;
+        }
+
+        .form-group textarea {
+            height: 120px;
+        }
+
+        .submit-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 14px 35px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .submit-btn:hover {
+            transform: scale(1.05);
+        }
+
+        footer {
+            background: #1e3c72;
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .about-content,
+            .contact-wrapper,
+            .teacher-row {
+                grid-template-columns: 1fr;
+            }
+
+            .about-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                🎓 ATM O'quv Markaz
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#home">Bosh Sahifa</a></li>
+                    <li><a href="#about">Biz Haqimizda</a></li>
+                    <li><a href="#courses">Kurslar</a></li>
+                    <li><a href="#teachers">O'qituvchilar</a></li>
+                    <li><a href="#contact">Bog'lanish</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>Zamonaviy Kasbga Yo'naltirilgan Ta'lim!</h1>
+            <p>ATM O'quv Markazi - Kuchli bilim, yuqori natija va yorqin kelajak uchun.</p>
+            <a href="#courses" class="btn">Kurslarni Ko'rish</a>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about">
+        <h2 class="section-title">Biz Haqimizda</h2>
+        <div class="about-content">
+            <div class="about-text">
+                <p>ATM O'quv Markazi 2020-yildan beri professional ta'lim sohasida faoliyat yuritadi. Bizning maqsadimiz - har bir talabaga sifatli nazariy va amaliy bilim berish.</p>
+                <p>O'quv markazimiz zamonaviy o'quv usullari, yangi texnologiyalar va malakali ustozlar bilan ta'minlangan. Sizning yutug'ingiz bizning eng katta natijamiz.</p>
+            </div>
+            <div class="about-stats">
+                <div class="stat-box">
+                    <h3>1000+</h3>
+                    <p>Bitiruvchi</p>
+                </div>
+                <div class="stat-box">
+                    <h3>20</h3>
+                    <p>Ustoz</p>
+                </div>
+                <div class="stat-box">
+                    <h3>10+</h3>
+                    <p>Yil Tajriba</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Courses Section -->
+    <section id="courses">
+        <h2 class="section-title">Bizning Kurslar</h2>
+        <div class="courses-grid">
+            <div class="course-card">
+                <div class="course-image">📚</div>
+                <div class="course-content">
+                    <h3 class="course-title">Ingliz tili (Sevinch Doniyorova)</h3>
+                    <ul>
+                        <li>CEFR kurslari</li>
+                        <li>General English</li>
+                        <li>Bolalar uchun Ingliz tili</li>
+                        <li>Gramatika</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="course-card">
+                <div class="course-image">📐</div>
+                <div class="course-content">
+                    <h3 class="course-title">Matematika (Ravshan Ustoz)</h3>
+                    <ul>
+                        <li>Milliy Sertifikat</li>
+                        <li>Intensif matematika kurslari</li>
+                        <li>SAT</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="course-card">
+                <div class="course-image">🔢</div>
+                <div class="course-content">
+                    <h3 class="course-title">Matematika bolalar (Shamshon Ustoz)</h3>
+                    <ul>
+                        <li>Bolalar uchun matematika</li>
+                        <li>Prezident maktabi uchun tayyorlov</li>
+                        <li>Olimpiada uchun tayyorlov</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="course-card">
+                <div class="course-image">📖</div>
+                <div class="course-content">
+                    <h3 class="course-title">Ona tili (Bibisora Ustoz)</h3>
+                    <ul>
+                        <li>Milliy sertifikatga tayyorlov</li>
+                        <li>DTM uchun intensiv kurslar</li>
+                        <li>O'qituvchilar uchun kurslar</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="course-card">
+                <div class="course-image">⚖️</div>
+                <div class="course-content">
+                    <h3 class="course-title">Huquq (Tolib Ustoz)</h3>
+                    <ul>
+                        <li>DTM uchun kurslar</li>
+                        <li>Xususiy maktablarga tayyorlov</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="course-card">
+                <div class="course-image">🏛️</div>
+                <div class="course-content">
+                    <h3 class="course-title">Tarix (Shahobiddin Ustoz)</h3>
+                    <ul>
+                        <li>Milliy sertifikat uchun tayyorlov</li>
+                        <li>Olimpiada uchun maxsus kurslar</li>
+                        <li>DTM majburiy blok</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Teachers Section -->
+    <section id="teachers" class="teachers-section">
+        <div class="teachers-container">
+            <h2 class="section-title">Bizning O'qituvchilar</h2>
+            
+            <div class="teacher-row">
+                <div class="teacher-image">👨‍🏫</div>
+                <div class="teacher-details">
+                    <h3 class="teacher-name">Ravshan Ustoz</h3>
+                    <p class="teacher-subject">Matematika</p>
+                    <span class="teacher-experience">12 yil tajriba</span>
+                    <p class="teacher-bio">Ravshan ustoz - oliy matematik, Toshkent Davlat Texnika Universitetini muvaffaqqiyatli tamomlagan. U matematika fanidan chuqur bilimga ega va o'quvchilarga murakkab mavzularni oson tilda tushuntirish uslubiga ega.</p>
+                    <div class="teacher-skills">
+                        <span class="skill-tag">Algebra</span>
+                        <span class="skill-tag">Geometriya</span>
+                        <span class="skill-tag">SAT tayyorlov</span>
+                        <span class="skill-tag">Milliy sertifikat</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="teacher-row">
+                <div class="teacher-image">👩‍🏫</div>
+                <div class="teacher-details">
+                    <h3 class="teacher-name">Sevinch Ustoz</h3>
+                    <p class="teacher-subject">

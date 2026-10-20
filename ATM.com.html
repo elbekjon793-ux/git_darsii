@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ATM Maktab - Yangilangan Versiya</title>
+<style>
+/* STILLAR */
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+body { background: #f4f6f9; color: #333; }
+
+/* LOGIN BO'LIMI */
+.login-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+}
+.login-box {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+    width: 100%;
+    max-width: 400px;
+    animation: slideIn 0.5s ease;
+}
+@keyframes slideIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+.logo { text-align: center; font-size: 2.2rem; margin-bottom: 25px; color: #1e3c72; font-weight: 800; letter-spacing: -1px; }
+
+.role-buttons { display: flex; gap: 15px; margin-bottom: 25px; background: #eee; padding: 5px; border-radius: 12px; }
+.role-btn {
+    flex: 1; padding: 10px; text-align: center; border-radius: 8px; cursor: pointer;
+    transition: all 0.3s; font-weight: bold; color: #666;
+}
+.role-btn.active { background: white; color: #1e3c72; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+
+.form-group { margin-bottom: 20px; }
+.form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #444; }
+.form-group input {
+    width: 100%; padding: 14px; border: 2px solid #ddd; border-radius: 10px;
+    transition: border-color 0.3s; font-size: 16px;
+}
+.form-group input:focus { outline: none; border-color: #2a5298; }
+
+.login-btn {
+    width: 100%; padding: 15px; background: linear-gradient(to right, #ff6b35, #e55a26);
+    color: white; border: none; border-radius: 10px; font-size: 1.1rem; cursor: pointer;
+    font-weight: bold; box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4); transition: transform 0.2s;
+}
+.login-btn:hover { transform: translateY(-2px); }
+.error { background: #ffe6e6; color: #d63031; padding: 12px; border-radius: 8px; display: none; margin-bottom: 20px; text-align: center; border-left: 5px solid #d63031; }
+.info { margin-top: 20px; padding: 15px; background: #f9f9f9; border-radius: 8px; font-size: 0.85rem; line-height: 1.6; color: #666; }
+
+/* DASHBOARD BO'LIMI */
+.dashboard { display: none; animation: fadeIn 0.4s ease; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.header {
+    background: #1e3c72; color: white; padding: 15px 30px;
+    display: flex; justify-content: space-between; align-items: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.header h1 { font-size: 1.3rem; }
+.user-info { display: flex; align-items: center; gap: 15px; font-weight: bold;}
+.logout {
+    padding: 8px 18px; background: rgba(255,255,255,0.1); color: white;
+    border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; cursor: pointer;
+    transition: background 0.3s;
+}
+.logout:hover { background: rgba(255,255,255,0.2); }
+
+.container { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
+.welcome {
+    background: linear-gradient(135deg, #1e3c72, #2a5298); color: white;
+    padding: 30px; border-radius: 15px; margin-bottom: 25px;
+    box-shadow: 0 5px 15px rgba(46, 49, 49, 0.2);
+}
+
+.card {
+    background: white; padding: 25px; border-radius: 15px; margin-bottom: 25px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+}
+.card h3 { color: #1e3c72; margin-bottom: 20px; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px; }
+
+/* JADVALLAR */
+table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+th, td { padding: 14px 12px; text-align: left; border-bottom: 1px solid #eee; font-size: 0.95rem; }
+th { background: #f8f9fa; color: #333; font-weight: 700; border-top: none; }
+tr:hover { background: #fafafa; }
+
+/* BAHO BELGILARI */
+.badge {
+    padding: 4px 10px; border-radius: 20px; font-weight: bold; color: white; font-size: 0.85rem;
+}
+.grade-5 { background: #27ae60; } /* Yashil */
+.grade-4 { background: #2ecc71; } /* Och yashil */
+.grade-3 { background: #f39c12; } /* Sariq */
+.grade-2 { background: #e74c3c; } /* Qizil */
+
+.delete-btn { background: #ee5253; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; }
+.delete-btn:hover { background: #c0392b; }
+
+.jurnal-table select, .jurnal-table input {
+    width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;
+}
+.save-btn { padding: 8px 15px; background: #00b894; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+.save-btn:hover { background: #00997a; }
+
+.avg-box {
+    background: #fff; padding: 15px; border-radius: 10px; display: inline-block;
+    margin-top: 20px; font-weight: bold; color: #d35400; border: 2px dashed #fab1a0;
+}
+</style>
+</head>
+<body>
+
+<!-- KIRISH SAHIFASI -->
+<div class="login-page" id="loginPage">
+    <div class="login-box">
+        <div class="logo">🏫 ATM Maktab</div>
+        
+        <div class="role-buttons">
+            <div class="role-btn active" onclick="setRole('student')" id="studentBtn">🎓 O'quvchi</div>
+            <div class="role-btn" onclick="setRole('teacher')" id="teacherBtn">👨‍🏫 Ustoz</div>
+        </div>
+
+        <div class="error" id="errorMsg">❌ Login yoki parol noto'g'ri!</div>
+        
+        <form onsubmit="doLogin(event)">
+            <div class="form-group">
+                <label>Login</label>
+                <input type="text" id="username" placeholder="Loginingizni kiriting..." required autofocus>
+            </div>
+            <div class="form-group">
+                <label>Parol</label>
+                <input type="password" id="password" placeholder="Parolingizni kiriting..." required>
+            </div>
+            <button type="submit" class="login-btn">🚪 Tizimga Kirish</button>
+        </form>
+
+        <div class="info" id="loginInfo">
+            <u>Test Hisoblash Malumotlari:</u><br><br>
+            <b>O'quvchilar:</b><br>
+            - ali / 123<br>
+            - bakhtiyor / 543<br><br>
+            <b>Ustozlar:</b><br>
+            - karimov / mat<br>
+            - ahmadaliyev / fiz
+        </div>
+    </div>
+</div>
+
+<!-- O'QUVCHI DASHBOARD -->
+<div class="dashboard" id="studentDashboard">
+    <div class="header">
+        <h1>🏫 ATM Maktab</h1>
+        <div class="user-info">
+            <span id="studentName"></span>
+            <button class="logout" onclick="doLogout()">Chiqish</button>
+        </div>
+    </div>
+    <div class="container">
+        <div class="welcome">
+            <h2>Xush kelibsiz! 👋</h2>
+            <p>Sizning hozirgi natijalaringiz quyidagi jadvalda keltirilgan.</p>
+        </div>
+        <div class="card">
+            <h3>📊 Mening Baholarim</h3>
+            <table>
+                <thead>
+                    <tr><th>Fan Nomi</th><th>Ustoz Ismi</th><th>Baho</th><th>Sana</th><th>Izoh</th></tr>
+                </thead>
+                <tbody id="gradesList"></tbody>
+            </table>
+            <div class="avg-box" id="avgBox" style="display:none;">
+                Umumiy O'rtacha Ball: <span id="avgGrade" style="font-size: 1.5rem; color: #d35400;">0</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- USTOZ DASHBOARD -->
+<div class="dashboard" id="teacherDashboard">
+    <div class="header">
+        <h1>🏫 ATM Maktab - Ustoz Paneli</h1>
+        <div class="user-info">
+            <span id="teacherName"></span>
+            <button class="logout" onclick="doLogout()">Chiqish</button>
+        </div>
+    </div>
+    <div class="container">
+        <div class="welcome">
+            <h2 id="teacherWelcome">Ustoz Paneli</h2>
+            <p>O'quvchilarga baho qo'yish uchun kerakli maydonlarni to'ldiring.</p>
+        </div>
+        
+        <!-- JURNAL FORMASI -->
+        <div class="card">
+            <h3>📝 Baholash Jurnali - <span id="jurnalSubject" style="color:#e67e22;"></span></h3>
+            <table class="jurnal-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>O'quvchi Ismi</th>
+                        <th>Sinf</th>
+                        <th>Baho</th>
+                        <th>Izoh (ixtiyoriy)</th>
+                        <th>Amal</th>
+                    </tr>
+                </thead>
+                <tbody id="jurnalList"></tbody>
+            </table>
+        </div>
+
+        <!-- QO'SHILGAN BAHOLAR RO'YXATI -->
+        <div class="card">
+            <h3>📋 Oxirgi Qo'shilgan Baholar</h3>
+            <table>
+                <thead>
+                    <tr><th>O'quvchi</th><th>Fan</th><th>Baho</th><th>Izoh</th><th>Sana</th><th>O'chirish</th></tr>
+                </thead>
+                <tbody id="teacherGrades"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+// --- MA'LUMOTLAR VA DASTLABKI SOZLAMALAR ---
+
+// Rolni saqlash
+var role = "student";
+var currentUser = "";
+
+// Foydalanuvchilar bazasi
+var studentsDB = {
+    "ali": {pass: "123", name: "Alimov Ali", klass: "9-A"},
+    "bakhtiyor": {pass: "543", name: "Rajabov Bakhtiyor", klass: "9-A"},
+    "odiljon": {pass: "111", name: "Qodirov Odiljon", klass: "9-A"},
+    "saira": {pass: "222", name: "Nazarova Saira", klass: "9-B"}
+};
+
+// Ustozlar bazasi
+var teachersDB = {
+    "Sevinch": {pass: "teacher", name: "Karimov Akmal", subject: "Matematika"},
+    "ahmadaliyev": {pass: "fiz", name: "Ahmadaliyev Davron", subject: "Fizika"}
+};
+
+// Baholar ro'yxati (BIRINCHI NAVBATDA LOCALSTORAGE DAN OLAMIZ)
+var allGrades = JSON.parse(localStorage.getItem('atm_grades')) || [
+    // Agar bo'sh bo'lsa, namunaviy ma'lumotlar
+    {student: "ali", subject: "Matematika", teacher: "Karimov Akmal", grade: 5, comment: "Namuna ish uchun", date: "24.10.2023"},
+    {student: "bakhtiyor", subject: "Fizika", teacher: "Ahmadaliyev Davron", grade: 4, comment: "Yaxshi baho", date: "23.10.2023"}
+];
+
+// Agar avvaldan ma'lumot bo'lmasa (birinchi marta foydalanyotgan bo'lsa), defaultlarni saqlab olamiz
+if (!localStorage.getItem('atm_grades')) {
+    saveToStorage();
+}
+
+// --- FUNKSIYALAR ---
+
+function setRole(r) {
+    role = r;
+    document.getElementById("studentBtn").className = r === "student" ? "role-btn active" : "role-btn";
+    document.getElementById("teacherBtn").className = r === "teacher" ? "role-btn active" : "role-btn";
+    
+    // Info matnini almashtirish
+    var infoText = "";
+    if (r === "student") infoText = "<u>O'quvchi test hisoblari:</u><br>ali / 123<br>bakhtiyor / 543";
+    else infoText = "<u>Ustoz test hisoblari:</u><br>karimov / mat<br>ahmadaliyev / fiz";
+    
+    document.getElementById("loginInfo").innerHTML = infoText;
+    document.getElementById("errorMsg").style.display = "none";
+}
+
+function doLogin(e) {
+    e.preventDefault(); // Sahifani qayta yuklamaslik
+    
+    var usernameInput = document.getElementById("username").value.trim().toLowerCase(); // Katta-kichik harfga chidamli
+    var passInput = document.getElementById("password").value.trim();
+
+    // TEKSHIRISH
+    if (role === "student") {
+        if (studentsDB[usernameInput] && studentsDB[usernameInput].pass === passInput) {
+            currentUser = usernameInput;
+            openStudentDashboard(usernameInput);
+        } else showError("Login yoki parol xato!");
+    } else {
+        if (teachersDB[usernameInput] && teachersDB[usernameInput].pass === passInput) {
+            currentUser = usernameInput;
+            openTeacherDashboard(usernameInput);
+        } else showError("Login yoki parol xato!");
+    }
+}
+
+function showError(msg) {
+    var errDiv = document.getElementById("errorMsg");
+    errDiv.textContent = "❌ " + msg;
+    errDiv.style.display = "block";
+    setTimeout(() => errDiv.style.display = 'none', 3000);
+}
+
+function doLogout() {
+    document.getElementById("loginPage").style.display = "flex";
+    document.getElementById("studentDashboard").style.display = "none";
+    document.getElementById("teacherDashboard").style.display = "none";
+    document.getElementById("username").value = "";
+    document.getElementById("password").value = "";
+    currentUser = "";
+}
+
+// --- O'QUVCHI BO'LIMI LOGIKASI ---
+function openStudentDashboard(user) {
+    switchPage("studentDashboard");
+    document.getElementById("studentName").textContent = studentsDB[user].name;
+    renderStudentGrades(user);
+}
+
+function renderStudentGrades(user) {
+    var list = document.getElementById("gradesList");
+    list.innerHTML = "";
+    var total = 0, count = 0;
+
+    // Foydalanuvchiga tegishli baholarni filtratsiya qilish
+    var myGrades = allGrades.filter(g => g.student === user);
+
+    if (myGrades.length === 0) {
+        list.innerHTML = "<tr><td colspan='5' style='text-align:center; color:#999;'>Sizga hali baho qo'yilmagan.</td></tr>";
+        document.getElementById("avgBox").style.display = "none";
+        return;
+    }
+
+    myGrades.forEach((g, index) => {
+        total += g.grade;
+        count++;
+        var row = `<tr>
+            <td>${g.subject}</td>
+            <td>${g.teacher}</td>
+            <td><span class="badge grade-${g.grade}">${g.grade}</span></td>
+            <td>${g.date}</td>
+            <td>${g.comment || '-'}</td>
+        </tr>`;
+        list.innerHTML += row;
+    });
+
+    // Ortacha hisoblash
+    var avg = count > 0 ? (total / count).toFixed(2) : 0;
+    document.getElementById("avgGrade").textContent = avg;
+    document.getElementById("avgBox").style.display = "inline-block";
+}
+
+// --- USTOZ BO'LIMI LOGIKASI ---
+function openTeacherDashboard(user) {
+    switchPage("teacherDashboard");
+    var t = teachersDB[user];
+    
+    document.getElementById("teacherName").textContent = t.name;
+    document.getElementById("teacherWelcome").textContent = `Assalomu alaykum, ${t.name}!`;
+    document.getElementById("jurnalSubject").textContent = t.subject;
+
+    renderJurnalForm(t);
+    renderTeacherHistory(t);
+}
+
+function renderJurnalForm(teacherObj) {
+    var container = document.getElementById("jurnalList");
+    container.innerHTML = "";
+    var index = 1;
+
+    for (var key in studentsDB) {
+        var student = studentsDB[key];
+        var html = `
+        <tr>
+            <td>${index++}</td>
+            <td><strong>${student.name}</strong></td>
+            <td>${student.klass}</td>
+            <td>
+                <select id="grade_${key}">
+                    <option value="">Bahoni tanlang...</option>
+                    <option value="5">5 (A'lo)</option>
+                    <option value="4">4 (Yaxshi)</option>
+                    <option value="3">3 ("Qoniqarli")</option>
+                    <option value="2">2 (Qoniqarsiz)</option>
+                </select>
+            </td>
+            <td><input type="text" id="comment_${key}" placeholder="Eslatma..."></td>
+            <td><button class="save-btn" onclick="saveGrade('${key}')">+ Saqlash</button></td>
+        </tr>`;
+        container.innerHTML += html;
+    }
+}
+
+function saveGrade(studentKey) {
+    var gradeVal = document.getElementById("grade_" + studentKey).value;
+    var commentVal = document.getElementById("comment_" + studentKey).value;
+    var t = teachersDB[currentUser]; // Joriy ustoz
+
+    if (!gradeVal) {
+        alert("Iltimos, birorta bahoni tanlang!");
+        return;
+    }
+
+    // Sana generatsiyasi (Standart format)
+    var today = new Date();
+    var dateStr = padDate(today.getDate()) + "." + padDate(today.getMonth()+1) + "." + today.getFullYear();
+
+    // Yangi obyekt yaratish
+    var newGrade = {
+        student: studentKey,
+        subject: t.subject,
+        teacher: t.name,
+        grade: parseInt(gradeVal),
+        comment: commentVal,
+        date: dateStr
+    };
+
+    // Global massivga qo'shish
+    allGrades.push(newGrade);
+    saveToStorage(); // Brauzer xotirasiga saqlash
+
+    // Formani tozalash
+    document.getElementById("grade_" + studentKey).value = "";
+    document.getElementById("comment_" + studentKey).value = "";
+
+    // Jadvallarni yangilash
+    renderTeacherHistory(t);
+    alert(`✅ ${studentsDB[studentKey].name} ga ${gradeVal} baho qo'yildi!`);
+}
+
+function renderTeacherHistory(teacherObj) {
+    var list = document.getElementById("teacherGrades");
+    list.innerHTML = "";
+
+    // Faqat shu ustozning faniga qo'yilgan baholarni filtrlash
+    var mySubjectGrades = allGrades.filter(g => g.subject === teacherObj.subject);
+
+    if (mySubjectGrades.length === 0) {
+        list.innerHTML = "<tr><td colspan='6' style='text-align:center;'>Hali hech narsa yozilmagan.</td></tr>";
+        return;
+    }
+
+    mySubjectGrades.forEach((g, i) => {
+        // Haqiqiy indeksni topish (o'chirish uchun)
+        var realIndex = allGrades.indexOf(g); 
+        var sName = studentsDB[g.student] ? studentsDB[g.student].name : g.student;
+
+        var row = `
+        <tr>
+            <td><strong>${sName}</strong></td>
+            <td>${g.subject}</td>
+            <td><span class="badge grade-${g.grade}">${g.grade}</span></td>
+            <td>${g.comment || '-'}</td>
+            <td>${g.date}</td>
+            <td><button class="delete-btn" onclick="deleteGrade(${realIndex})">🗑️ O'chirish</button></td>
+        </tr>`;
+        list.innerHTML += row;
+    });
+}
+
+function deleteGrade(index) {
+    if(confirm("Rostdan ham bu bahoni o'chirmoqchimisiz?")) {
+        allGrades.splice(index, 1);
+        saveToStorage();
+        renderTeacherHistory(teachersDB[currentUser]); // Jadvalni yangila
+    }
+}
+
+// --- YORDAMCHI FUNKSIYALAR ---
+function switchPage(pageId) {
+    document.getElementById("loginPage").style.display = "none";
+    document.getElementById("studentDashboard").style.display = "none";
+    document.getElementById("teacherDashboard").style.display = "none";
+    document.getElementById(pageId).style.display = "block";
+}
+
+function saveToStorage() {
+    // Ma'lumotlarni string formatiga o'tkazib saqlash
+    localStorage.setItem('atm_grades', JSON.stringify(allGrades));
+}
+
+function padDate(n) {
+    return n < 10 ? '0' + n : n;
+}
+</script>
+</body>
+</html>
